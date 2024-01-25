@@ -1,0 +1,45 @@
+class Car{
+    public string model:
+    public string make:
+    public int milesPerGallon;
+    public int gallons;
+}
+
+var cars = new List<Car>();
+
+
+var car = new Car();
+car.model = 'Honda';
+car.make = 'civic';
+car.gallons = 10;
+car.milesPerGallon = 30;
+
+cars.Add(car);
+
+car = new Car(); 
+car.model = 'Ford';
+car.make = 'F-150';
+car.gallons = 30;
+car.milesPerGallon = 5; 
+
+cars.Add(car); 
+
+foreach(var c in cars){
+    System.Console.WriteLine(${c.make}{c.model}{c.gallons}{c.milesPerGallon})
+}
+
+
+
+car = new Car() //makes a new input for the class 
+car.model 
+car.milesPerGallon
+//etc, information on the car 
+// to add another class in the class
+owner = new Person();  
+owner.name
+owner.phone 
+car.owner = owner  //adds this info as the owner. Would need anothr class file so the program can use this class  
+
+cars.Add(car);  //inputs this as the input for the new input we made 
+
+
