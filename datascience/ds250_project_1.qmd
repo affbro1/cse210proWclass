@@ -1,0 +1,200 @@
+---
+title: "Client Report - Project 1"
+subtitle: "Course DS 250"
+author: "Victor Affleck"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
+---
+
+```{python}
+#| label: libraries
+#| include: false
+import pandas as pd
+import numpy as np
+import plotly.express as px
+```
+
+
+## Elevator pitch
+
+Names are an important factor of practically every culture and civilization that we know has exsisted on the Earth. Historically each culture had its own pool of names to choose from. With the rise of Christianity and the Christian missionary Christian names began to spread over the world and influence these cultural name pools. Today we're going to look at some of these influences. 
+
+```{python}
+#| label: Birth names counts by year for each US state
+#| code-summary: Obtain name data and assign it a dataframe 
+df = pd.read_csv("https://raw.githubusercontent.com/byuidatascience/data4names/master/data-raw/names_year/names_year.csv")
+```
+
+
+## QUESTION 1
+How does your name at your birth year compare to its use historically?
+
+
+The name "Victor" seems to go through spikes and valleys of use over the years. Spiking at 1918, in the 1950-1960's, and 2003. The popularity of the name when I was given it was during one of the rises to the 2003 spike. The name seems to be in decline in recent years. My birthyear seems to be nesteled inbetween two spikes before the name hit it's highest popularity and represents a sort of lull in popularity. 
+
+```{python}
+#| label: Q1
+#| code-summary: Create the 'victor' variable for the chart
+victor = df.query("name == 'Victor' ")
+
+```
+
+
+```{python}
+#| label: Q1 chart
+#| code-summary: line graph code
+#| fig-cap: "Historical useage of the name 'Victor' "
+#| fig-align: center
+
+chart = px.line(victor,
+    x = 'year',
+    y = 'Total' 
+    )
+chart.add_annotation(x= 1996, y=3286.5,
+    text = "Birthdate of Author",
+    showarrow = True, 
+    arrowhead=1,
+    )
+chart.show()
+
+```
+
+## QUESTION 2
+
+If you talked to someone named Brittany on the phone, what is your guess of his or her age? What ages would you not guess?
+
+At time of writing the year is 2024. If I were on a phone call with a person named Brittany and had to guess their age over the phone for some reason, using the graph I would assume their birthdate is 1990 as it is the height of the popularity of their name. Making this person 34 years old. I would not guess ages at or before 1984 or at or after 1999. So older than 40 or younger than 25.
+
+```{python}
+#| label: Q2
+#| code-summary: Create the 'Brittany' variable
+brittany = df.query("name== 'Brittany' ")
+```
+
+
+```{python}
+#| label: Q2 chart
+#| code-summary: bar example
+#| fig-cap: "Usage of the name 'Brittany' "
+#| fig-align: center
+chart = px.bar(brittany,
+    x = 'year',
+    y = 'Total' 
+    )
+chart.add_annotation(x= 1990, y=33000,
+    text = "Author's Best Guess",
+    showarrow = True, 
+    )
+chart.show()
+```
+
+
+
+## QUESTION 3
+
+Mary, Martha, Peter, and Paul are all Christian names. From 1920 - 2000, compare the name usage of each of the four names. What trends do you notice?
+
+Looking at the graphs it would appear that the names Mary, Martha, Peter, and Paul all had a big spike in popularity in the 1940's and 1950's. Afterwhich there is a big loss is popularity as the graphs approach the 2000's. 
+
+```{python}
+#| label: Q3
+#| code-summary: Read and format data
+# Include and execute your code here
+mary = df.query("name == 'Mary' ")
+martha = df.query("name == 'Martha' ")
+peter = df.query("name == 'Peter' ")
+paul  = df.query("name == 'Paul' ")
+
+
+```
+
+
+```{python}
+#| label: Q3 charts
+#| code-summary: make charts for the usage of the names Mary, Martha, Peter, and Paul from 1920 - 2000
+#| fig-cap: Mary, Martha, Peter, and Paul Graphs
+#| fig-align: center
+
+chart1 = px.line(mary, 
+    x = 'year',
+    y = 'Total',
+    title = 'Mary'
+    )
+chart2 = px.line( martha, 
+    x = 'year',
+    y = 'Total',
+    title = 'Martha'
+    )
+chart3 = px.line(peter,
+    x = 'year',
+    y = 'Total',
+    title = 'Peter'
+    )
+chart4 = px.line(paul,
+    x = 'year',
+    y = 'Total',
+    title = 'Paul'
+    )
+chart1.update_xaxes(range=[1920, 2000])
+chart2.update_xaxes(range=[1920, 2000])
+chart3.update_xaxes(range=[1920, 2000])
+chart4.update_xaxes(range=[1920, 2000])
+chart1.show()
+chart2.show()
+chart3.show()
+chart4.show()
+```
+
+
+
+## QUESTION 4
+
+Think of a unique name from a famous movie. Plot the usage of that name and see how changes line up with the movie release. Does it look like the movie had an effect on usage?
+
+I chose the movie series 'The Hunger Games' and it's main character Katniss for this question. As the chart shows, Katniss is not a name that was used historically and despite the success of the movie and book series the name did not gain any traction in the name pool.  
+
+```{python}
+#| label: Q4
+#| code-summary: Read and format data
+# Include and execute your code here
+katniss = df.query("name == 'Katniss' ")
+
+```
+
+```{python}
+#| label: Q4 chart
+#| code-summary: creates empty line graph
+#| fig-cap: Katniss Chart
+#| fig-align: center
+# Include and execute your code here
+
+
+chart = px.line(katniss,
+    x = 'year',
+    y = 'Total'
+    )
+chart.update_xaxes(range=[1900, 2015])
+chart.show()
+
+
+```
+

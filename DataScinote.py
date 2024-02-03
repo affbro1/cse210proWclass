@@ -38,3 +38,28 @@ maximus = df.query("name == 'Maximus' ")
 px.line(maximus,
     x = 'year',
     y = 'Total')
+
+
+
+#brittany question? Example code from class
+brittany_data = data_frame.query("name == 'Brittany' ")
+brittany_data = name_Brittany 
+brittany_data["Age"] = 2024 - brittany_data.year
+
+px.scatter(brittany_data,
+           x = "Age"
+           y = "Total",
+           title = "The relationship between name and age counts 
+           .add_annotation(x= 34, y = 32562.5, test = "estimated age"))
+           
+           
+           
+           
+           
+           
+
+
+
+
+
+

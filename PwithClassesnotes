@@ -43,3 +43,9 @@ car.owner = owner  //adds this info as the owner. Would need anothr class file s
 cars.Add(car);  //inputs this as the input for the new input we made 
 
 
+//1/29/24
+//taking a design document and turning it into code 
+
+namespace Examplename 
+
+Console.Clear(); 
