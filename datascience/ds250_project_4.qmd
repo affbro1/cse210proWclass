@@ -1,0 +1,83 @@
+---
+title: "Client Report - Project 4"
+subtitle: "Course DS 250"
+author: "Victor Affleck"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
+---
+
+```{python}
+#| label: libraries
+#| include: false
+import pandas as pd
+import numpy as np
+import plotly.express as px
+```
+
+
+## Introduction
+In this presentation we will be going over some concepts of machine learning using data from Colorado concerning the clean air act of 1970. Mainly discussing topics that would allow us to build a predictive model that can cliassify if a house is build pre 1980. 
+
+
+```{python}
+#| label: project data
+#| code-summary: Read and format project data
+# Include and execute your code here
+df = pd.read_csv("https://raw.githubusercontent.com/byuidatascience/data4dwellings/master/data-raw/dwellings_ml/dwellings_ml.csv")
+```
+
+## Exploring potential relationships between homes built before 1980
+
+Create 2-3 charts that evaluate potential relationships between the home variables and before1980. Explain what you learn from the charts that could help a machine learning algorithm.
+
+I made up two charts using data of houses only built before 1980. One uses 'arcstyle' which is the type of home and the other uses 'gartype' or the type of garage. From these charts we can gather that there are types of building styles that homes from before he 1980's commonly had. Along with sytles that they did not have. For example, from this data there are no homes that were made in the Split Level or Tri-Level design. So we can tell our machine learning algorithm that none of the homes before 1980 have split levels, so when the algorithm sees a split level home it can disqualify. 
+
+For building types that are higher we can tell the algorithm that if it sees a building with no garage or a detached garage for example, there is a higher chance that it was built before the 1980's. This is less dependable that knowing that no home build before 1980 has certain characterisitcs, but is still useful. 
+
+```{python}
+#| label: Q1
+import matplotlib.pyplot as plt
+
+time = df.query("yrbuilt < 1980 ").sum()
+
+house_type = time[['arcstyle_BI-LEVEL','arcstyle_CONVERSIONS', 'arcstyle_END UNIT','arcstyle_MIDDLE UNIT','arcstyle_ONE AND HALF-STORY','arcstyle_ONE-STORY','arcstyle_SPLIT LEVEL','arcstyle_THREE-STORY','arcstyle_TRI-LEVEL','arcstyle_TRI-LEVEL WITH BASEMENT','arcstyle_TWO AND HALF-STORY','arcstyle_TWO-STORY']]
+
+
+
+garage_type = time[['gartype_Att','gartype_Att/Det','gartype_CP','gartype_Det','gartype_None','gartype_att/CP','gartype_det/CP']]
+
+fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+garage_type.plot(kind='bar', ax=axes[0])
+axes[0].set_title('Garage Type')
+
+house_type.plot(kind='bar', ax=axes[1])
+axes[1].set_title('House Type')
+
+plt.tight_layout()
+
+plt.show()
+
+
+
+
+```
+

@@ -124,7 +124,7 @@ martha = df.query("name == 'Martha' ")
 peter = df.query("name == 'Peter' ")
 paul  = df.query("name == 'Paul' ")
 
-
+combined_df = pd.concat([mary, martha, peter, paul], keys=['Mary', 'Martha', 'Peter', 'Paul'])
 ```
 
 
@@ -133,35 +133,11 @@ paul  = df.query("name == 'Paul' ")
 #| code-summary: make charts for the usage of the names Mary, Martha, Peter, and Paul from 1920 - 2000
 #| fig-cap: Mary, Martha, Peter, and Paul Graphs
 #| fig-align: center
+combined_df = combined_df.reset_index()
 
-chart1 = px.line(mary, 
-    x = 'year',
-    y = 'Total',
-    title = 'Mary'
-    )
-chart2 = px.line( martha, 
-    x = 'year',
-    y = 'Total',
-    title = 'Martha'
-    )
-chart3 = px.line(peter,
-    x = 'year',
-    y = 'Total',
-    title = 'Peter'
-    )
-chart4 = px.line(paul,
-    x = 'year',
-    y = 'Total',
-    title = 'Paul'
-    )
-chart1.update_xaxes(range=[1920, 2000])
-chart2.update_xaxes(range=[1920, 2000])
-chart3.update_xaxes(range=[1920, 2000])
-chart4.update_xaxes(range=[1920, 2000])
-chart1.show()
-chart2.show()
-chart3.show()
-chart4.show()
+fig = px.line(combined_df, x='year', y='Total', color='name', title='Combined Data')
+fig.update_xaxes(range=[1920, 2000])
+fig.show()
 ```
 
 

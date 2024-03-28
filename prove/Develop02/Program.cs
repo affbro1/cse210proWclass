@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 class Program
 {
-    public Journal journal; 
+ 
 //Example code from class 
     static void Main(string[] args)
     {

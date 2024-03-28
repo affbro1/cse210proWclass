@@ -20,3 +20,6 @@ flights.value_counts()
 result = flights[flights['month']== 'n/a']
 print(result)
 # %%
+
+
+

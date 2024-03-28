@@ -1,0 +1,174 @@
+---
+title: "Project 3: Finding relationships in baseball"
+subtitle: "Course DS 250"
+author: "Victor Affleck"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
+---
+
+
+```{python}
+import pandas as pd
+import numpy as np
+import plotly.express as px
+import sqlite3
+```
+
+
+## What does that mean?
+There are many metrics in baseball, many of which are hard to understand or discern to an outsider or entry level fan. In this report we will take a database of players, teams, and other information and present said information in a way that should be easier for the layman to understand. 
+
+```{python}
+#| label: project data
+#| code-summary: Connect to database 
+con = sqlite3.connect("lahmansbaseballdb.sqlite")
+```
+
+## Salaries of players who attended BYU-Idaho 
+
+
+Write an SQL query to create a new dataframe about baseball players who attended BYU-Idaho. The new table should contain five columns: playerID, schoolID, salary, and the yearID/teamID associated with each salary. Order the table by salary (highest to lowest) and print out the table in your report.
+
+```{python}
+#| label: Q1
+df = pd.read_sql_query("""
+SELECT DISTINCT salaries.playerID, collegeplaying.schoolID, salaries.salary, salaries.yearID, salaries.teamID
+FROM salaries 
+INNER JOIN people 
+ON salaries.playerID = people.playerID
+INNER JOIN collegeplaying
+ON salaries.playerID = collegeplaying.playerID
+INNER JOIN schools
+ON collegeplaying.schoolID = schools.schoolID
+WHERE schools.schoolID = 'idbyuid'
+ORDER BY salaries.salary DESC;
+
+""",con)
+display(df)
+
+```
+
+
+## Top 5 batting average stats under various conditions
+This three-part question requires you to calculate batting average (number of hits divided by the number of at-bats)
+
+Write an SQL query that provides playerID, yearID, and batting average for players with at least 1 at bat that year. Sort the table from highest batting average to lowest, and then by playerid alphabetically. Show the top 5 results in your report.
+
+Use the same query as above, but only include players with at least 10 at bats that year. Print the top 5 results.
+
+Now calculate the batting average for players over their entire careers (all years combined). Only include players with at least 100 at bats, and print the top 5 results.
+```{python}
+#| label: Q2 a
+
+db2a = pd.read_sql_query("""
+  SELECT playerID, yearID, ((H + 0.0) / AB) AS batting_average
+  FROM batting
+  WHERE AB >= 1
+  ORDER BY batting_average DESC, playerID DESC
+  LIMIT 5
+""",con
+)
+display(db2a)
+
+```
+
+
+```{python}
+#| label: Q2 b
+
+db2b = pd.read_sql_query("""
+  SELECT playerID, yearID, ((H + 0.0) / AB) AS batting_average
+  FROM batting
+  WHERE AB >= 10
+  ORDER BY batting_average DESC, playerID DESC
+  LIMIT 5
+""",con
+)
+display(db2b)
+
+```
+
+
+```{python}
+#| label: Q2 c
+
+db2c = pd.read_sql_query("""
+  SELECT playerID, (SUM((H + 0.0)) / SUM(AB)) AS batting_average
+  FROM batting
+  GROUP BY playerID
+  HAVING AB >= 100
+  ORDER BY batting_average DESC, playerID
+  LIMIT 5
+""",con
+)
+display(db2c)
+
+```
+
+## Home run comparison of Chicago Cubs and Minesota Twins
+
+Pick any two baseball teams and compare them using a metric of your choice (average salary, home runs, number of wins, etc). Write an SQL query to get the data you need, then make a graph using Plotly Express to visualize the comparison. What do you learn?
+
+I chose to compare the total home runs produces by the Chicago Cubs and the Minnesota Twins. According to this data set the Cubs have produced more home runs than the Twins by about 3,000. This is a decent metric to show that the Cubs are the stronger team as they have been able to produce a higher number of home runs.
+```{python}
+#| label: Q3
+
+cubs = pd.read_sql_query("""
+  SELECT teamsfranchises.franchName, SUM(teams.HR) AS total_homeruns
+  FROM teamsfranchises
+  INNER JOIN teams
+  ON teams.franchID = teamsfranchises.franchID
+  WHERE teamsfranchises.franchID IN ('CHC')
+""", con)
+cubs_total_homeruns = cubs['total_homeruns'].iloc[0]
+
+
+twins = pd.read_sql_query("""
+  SELECT teamsfranchises.franchName, SUM(teams.HR) AS total_homeruns
+  FROM teamsfranchises
+  INNER JOIN teams
+  ON teams.franchID = teamsfranchises.franchID
+  WHERE teamsfranchises.franchID IN ('MIN')
+
+""", con)
+twins_total_homeruns = twins['total_homeruns'].iloc[0]
+
+```
+
+```{python}
+#| label: Q3 chart
+#| code-summary: plot example
+#| fig-cap: "Comparison of Chicago Cubs and Minesota Twins"
+#| fig-align: center
+
+data = {'Total Home Runs': ['Team'],
+        'Chicago Cubs': [cubs_total_homeruns],
+        'Minesota Twins': [twins_total_homeruns]}
+
+df = pd.DataFrame(data)
+
+fig = px.bar(df, x='Total Home Runs', y=['Chicago Cubs', 'Minesota Twins'], barmode = 'group')
+fig.show()
+
+
+
+```

@@ -1,17 +1,15 @@
-using System.Net;
+using System;
 
 public class Entry{
 
-     public List<EntryList> entries;
+    public string _journalPrompt = "";
+    public string _journalEntry = "";
+    public string _journalFile = ""; 
 
-     public string Export(){}
-
-
-//class code 
-    public string response;
-    public string prompt;
-
-    this.response = response 
+    public void display(){
+        Console.WriteLine($"Prompt: {_journalPrompt}");
+        Console.WriteLine($"Entry: {_journalEntry}");
+    }
 
 
 }
